@@ -1,5 +1,6 @@
 body {
     display: flex;
+    flex-direction: column; /* Change to column to stack elements vertically */
     justify-content: center;
     align-items: center;
     height: 100vh;
@@ -7,8 +8,12 @@ body {
     margin: 0;
 }
 
+h1 {
+    color: blue; /* Set title color to blue */
+}
+
 canvas {
-    border: 2px solid #fff;
+    border: 2px solid #000; /* Change border color to black for contrast */
     background-color: #222;
 }
 
