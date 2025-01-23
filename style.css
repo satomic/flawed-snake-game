@@ -1,0 +1,21 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #000;
+    margin: 0;
+}
+
+canvas {
+    border: 2px solid #fff;
+    background-color: #222;
+}
+
+.snake {
+    background-color: #0f0;
+}
+
+.food {
+    background-color: #f00;
+}
