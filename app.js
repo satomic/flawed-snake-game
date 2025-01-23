@@ -3,7 +3,7 @@ function setup() {
     const ctx = canvas.getContext('2d');
     const box = 20;
     let snake = [{ x: 9 * box, y: 9 * box }];
-    let direction;
+    let direction = 'RIGHT';
     let changingDirection = false;
     let food = {
         x: Math.floor(Math.random() * 17 + 1) * box,
