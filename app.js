@@ -1,3 +1,9 @@
+/**
+ * Initializes the game setup, including the canvas, snake, direction, and food.
+ * Sets up the event listener for keydown events to change the snake's direction.
+ * Starts the game loop with a setInterval to repeatedly draw the game state.
+ */
+
 function setup() {
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
