@@ -9,8 +9,11 @@ function setup() {
     const ctx = canvas.getContext('2d');
     const box = 20;
     let snake = [{ x: 9 * box, y: 9 * box }];
-    let direction = 'RIGHT';
+    let direction = '';
     let changingDirection = false;
+    let score = 0;
+    let flashing = false;
+    let flashCount = 0;
     let food = {
         x: Math.floor(Math.random() * 17 + 1) * box,
         y: Math.floor(Math.random() * 15 + 3) * box
@@ -49,8 +52,19 @@ function setup() {
 
     function draw() {
         changingDirection = false;
-        ctx.fillStyle = 'lightgreen';
+        
+        // Set background color, handle flashing if active
+        if (flashing) {
+            ctx.fillStyle = flashCount % 2 === 0 ? 'lightgreen' : 'yellow';
+        } else {
+            ctx.fillStyle = 'lightgreen';
+        }
         ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Display score on canvas
+        ctx.fillStyle = 'black';
+        ctx.font = '20px Arial';
+        ctx.fillText('Score: ' + score, 10, 30);
 
         for (let i = 0; i < snake.length; i++) {
             ctx.fillStyle = (i === 0) ? 'green' : 'white';
@@ -62,15 +76,23 @@ function setup() {
         ctx.fillStyle = 'red';
         ctx.fillRect(food.x, food.y, box, box);
 
-        let snakeX = snake[0].x;
-        let snakeY = snake[0].y;
+        // Only move if direction is set
+        if (direction !== '') {
+            let snakeX = snake[0].x;
+            let snakeY = snake[0].y;
 
-        if (direction === 'LEFT') snakeX -= box;
-        if (direction === 'UP') snakeY -= box;
-        if (direction === 'RIGHT') snakeX += box;
-        if (direction === 'DOWN') snakeY += box;
+            if (direction === 'LEFT') snakeX -= box;
+            if (direction === 'UP') snakeY -= box;
+            if (direction === 'RIGHT') snakeX += box;
+            if (direction === 'DOWN') snakeY += box;
 
         if (snakeX === food.x && snakeY === food.y) {
+            // Increment score
+            score++;
+            
+            // Trigger flash effect
+            startFlashEffect();
+            
             food = {
                 x: Math.floor(Math.random() * 17 + 1) * box,
                 y: Math.floor(Math.random() * 15 + 3) * box
@@ -92,6 +114,24 @@ function setup() {
         }
 
         snake.unshift(newHead);
+    }
+    
+    // Function to handle the flash effect
+    function startFlashEffect() {
+        flashing = true;
+        flashCount = 0;
+        
+        function flash() {
+            flashCount++;
+            if (flashCount < 10) { // 5 flashes = 10 state changes (on/off)
+                setTimeout(flash, 100); // 0.1 second interval
+            } else {
+                flashing = false;
+            }
+        }
+        
+        flash();
+    }
     }
 
     let game = setInterval(draw, 100);
