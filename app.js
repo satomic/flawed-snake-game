@@ -9,7 +9,7 @@ function setup() {
     const ctx = canvas.getContext('2d');
     const box = 20;
     let snake = [{ x: 9 * box, y: 9 * box }];
-    let direction = 'RIGHT';
+    let direction = null;
     let changingDirection = false;
     let food = {
         x: Math.floor(Math.random() * 17 + 1) * box,
@@ -69,6 +69,11 @@ function setup() {
         if (direction === 'UP') snakeY -= box;
         if (direction === 'RIGHT') snakeX += box;
         if (direction === 'DOWN') snakeY += box;
+        
+        // If no direction is set, don't move the snake
+        if (direction === null) {
+            return;
+        }
 
         if (snakeX === food.x && snakeY === food.y) {
             food = {
