@@ -12,6 +12,8 @@ function setup() {
     let direction = null;
     let changingDirection = false;
     let score = 0;
+    let isFlashing = false;
+    let flashCount = 0;
     let food = {
         x: Math.floor(Math.random() * 17 + 1) * box,
         y: Math.floor(Math.random() * 15 + 3) * box
@@ -47,6 +49,26 @@ function setup() {
         }
         return false;
     }
+    
+    function startFlash() {
+        let flashingInterval;
+        let flashToggle = false;
+        
+        flashCount = 0;
+        isFlashing = true;
+        
+        flashingInterval = setInterval(() => {
+            flashToggle = !flashToggle;
+            flashCount++;
+            
+            // After 5 flashes (10 toggles), stop flashing
+            if (flashCount >= 10) {
+                clearInterval(flashingInterval);
+                isFlashing = false;
+                flashCount = 0;
+            }
+        }, 100); // 0.1 second interval
+    }
 
     function draw() {
         changingDirection = false;
@@ -54,7 +76,12 @@ function setup() {
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
         for (let i = 0; i < snake.length; i++) {
-            ctx.fillStyle = (i === 0) ? 'green' : 'white';
+            // Apply flash effect to snake head if flashing
+            if (i === 0 && isFlashing && flashCount % 2 === 0) {
+                ctx.fillStyle = 'yellow';
+            } else {
+                ctx.fillStyle = (i === 0) ? 'green' : 'white';
+            }
             ctx.fillRect(snake[i].x, snake[i].y, box, box);
             ctx.strokeStyle = 'red';
             ctx.strokeRect(snake[i].x, snake[i].y, box, box);
@@ -87,6 +114,7 @@ function setup() {
                 x: Math.floor(Math.random() * 17 + 1) * box,
                 y: Math.floor(Math.random() * 15 + 3) * box
             };
+            startFlash();
         } else {
             snake.pop();
         }
