@@ -11,6 +11,7 @@ function setup() {
     let snake = [{ x: 9 * box, y: 9 * box }];
     let direction = null;
     let changingDirection = false;
+    let score = 0;
     let food = {
         x: Math.floor(Math.random() * 17 + 1) * box,
         y: Math.floor(Math.random() * 15 + 3) * box
@@ -61,6 +62,11 @@ function setup() {
 
         ctx.fillStyle = 'red';
         ctx.fillRect(food.x, food.y, box, box);
+        
+        // Display score
+        ctx.fillStyle = 'black';
+        ctx.font = '20px Arial';
+        ctx.fillText(`Score: ${score}`, 10, 30);
 
         let snakeX = snake[0].x;
         let snakeY = snake[0].y;
@@ -76,6 +82,7 @@ function setup() {
         }
 
         if (snakeX === food.x && snakeY === food.y) {
+            score += 1;
             food = {
                 x: Math.floor(Math.random() * 17 + 1) * box,
                 y: Math.floor(Math.random() * 15 + 3) * box
