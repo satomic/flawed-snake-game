@@ -72,16 +72,17 @@ function setup() {
 
     function draw() {
         changingDirection = false;
-        ctx.fillStyle = 'lightgreen';
+        
+        // Apply flash effect to game background if flashing
+        if (isFlashing && flashCount % 2 === 0) {
+            ctx.fillStyle = 'yellow';
+        } else {
+            ctx.fillStyle = 'lightgreen';
+        }
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
         for (let i = 0; i < snake.length; i++) {
-            // Apply flash effect to snake head if flashing
-            if (i === 0 && isFlashing && flashCount % 2 === 0) {
-                ctx.fillStyle = 'yellow';
-            } else {
-                ctx.fillStyle = (i === 0) ? 'green' : 'white';
-            }
+            ctx.fillStyle = (i === 0) ? 'green' : 'white';
             ctx.fillRect(snake[i].x, snake[i].y, box, box);
             ctx.strokeStyle = 'red';
             ctx.strokeRect(snake[i].x, snake[i].y, box, box);
