@@ -9,12 +9,22 @@ function setup() {
     const ctx = canvas.getContext('2d');
     const box = 20;
     let snake = [{ x: 9 * box, y: 9 * box }];
-    let direction = 'RIGHT';
+    let direction = null; // No initial direction - player decides
     let changingDirection = false;
+    let score = 0;
+    let isFlashing = false;
+    let flashCount = 0;
     let food = {
         x: Math.floor(Math.random() * 17 + 1) * box,
         y: Math.floor(Math.random() * 15 + 3) * box
     };
+
+    const scoreElement = document.getElementById('score');
+
+    function updateScore() {
+        score++;
+        scoreElement.textContent = `Score: ${score}`;
+    }
 
     document.addEventListener('keydown', changeDirection);
 
@@ -47,7 +57,49 @@ function setup() {
         return false;
     }
 
+    function startFlashEffect() {
+        isFlashing = true;
+        flashCount = 0;
+        flashCanvas();
+    }
+
+    function flashCanvas() {
+        if (flashCount >= 10) { // 5 flashes = 10 transitions (on/off)
+            isFlashing = false;
+            return;
+        }
+        
+        // Toggle canvas visibility for flash effect
+        if (flashCount % 2 === 0) {
+            canvas.style.opacity = '0.3';
+        } else {
+            canvas.style.opacity = '1';
+        }
+        
+        flashCount++;
+        setTimeout(flashCanvas, 100); // 0.1 second interval
+    }
+
     function draw() {
+        // Don't move if no direction is set (initial state)
+        if (direction === null) {
+            // Just draw the initial state
+            changingDirection = false;
+            ctx.fillStyle = 'lightgreen';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            for (let i = 0; i < snake.length; i++) {
+                ctx.fillStyle = (i === 0) ? 'green' : 'white';
+                ctx.fillRect(snake[i].x, snake[i].y, box, box);
+                ctx.strokeStyle = 'red';
+                ctx.strokeRect(snake[i].x, snake[i].y, box, box);
+            }
+
+            ctx.fillStyle = 'red';
+            ctx.fillRect(food.x, food.y, box, box);
+            return;
+        }
+
         changingDirection = false;
         ctx.fillStyle = 'lightgreen';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -71,6 +123,8 @@ function setup() {
         if (direction === 'DOWN') snakeY += box;
 
         if (snakeX === food.x && snakeY === food.y) {
+            updateScore();
+            startFlashEffect();
             food = {
                 x: Math.floor(Math.random() * 17 + 1) * box,
                 y: Math.floor(Math.random() * 15 + 3) * box
